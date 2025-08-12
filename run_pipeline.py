@@ -1,6 +1,9 @@
 from Steps.ingest_data import *
 from Steps.data_prep import *
 from Steps.load_to_s3 import *
+import logging
+import os
+import datetime
 
 if __name__ == "__main__":
     df = ingest_data(google_sheets_json_path = '/Users/tawate/Documents/dinner_club_data_processing/clean-terminal-468616-k8-06169f567f7e.json', 
@@ -59,3 +62,22 @@ if __name__ == "__main__":
 
     # Load processed data to S3
     load_processed_data_to_s3(df_prep, bucket_name = 'dinner-club-tsw', csvfilename = 'dinner_club_rankings.csv')
+    
+    # Log the successful completion of the pipeline and run time to pipeline.log create the log file if its not created in the current directory
+    # Configure logging
+    logging.basicConfig(filename='pipeline.log', level=logging.INFO)
+    
+    # Get current time
+    completion_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Create log file if it doesn't exist
+    if not os.path.exists('pipeline.log'):
+        with open('pipeline.log', 'w') as f:
+            f.write('')
+        logging.info('Log file created')
+    
+    # Log the completion time and success message to the log file
+    with open('pipeline.log', 'a') as f:
+        f.write(f'Pipeline completed successfully at {completion_time}\n')
+    logging.info(f"Pipeline completed successfully at {completion_time}")
+    print(f"Pipeline completed successfully at {completion_time}")
