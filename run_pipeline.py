@@ -37,7 +37,7 @@ if __name__ == "__main__":
                        'Drinks (0 - 10)']
     
     # Prep data
-    prepare_data(df, cols_to_convert)
+    df_prep = prepare_data(df, cols_to_convert)
     
     # Function to calculate weighted ranking
     def calculate_weighted_ranking(row):
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         return weighted_sum   
     
     # Apply the function to each row to create a 'Weighted Ranking' column
-    df['Weighted Ranking'] = df.apply(calculate_weighted_ranking, axis=1)
+    df_prep['Weighted Ranking'] = df_prep.apply(calculate_weighted_ranking, axis=1)
 
     # Load processed data to S3
-    load_processed_data_to_s3(df, bucket_name = 'dinner-club-tsw', csvfilename = 'dinner_club_rankings.csv')
+    load_processed_data_to_s3(df_prep, bucket_name = 'dinner-club-tsw', csvfilename = 'dinner_club_rankings.csv')
